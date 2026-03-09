@@ -1,4 +1,4 @@
-# ⚙️ Step-by-Step Postman
+<img width="1866" height="82" alt="image" src="https://github.com/user-attachments/assets/35151ec9-cd40-459b-90dd-c7e71779b8f4" /># ⚙️ Step-by-Step Postman
 
 Setelah memahami alur pada **README.md** dan berhasil membuat project di **Firebase Authentication**, sekarang kita akan melanjutkan ke tahap **testing menggunakan Postman**.
 
@@ -6,7 +6,7 @@ Di bagian ini kita akan melakukan beberapa langkah untuk menguji proses autentik
 
 ---
 
-## 1️⃣ Setup Environment di Postman
+## Setup Environment di Postman
 
 1. Buka **Postman**.
 2. Pada menu sebelah kiri klik **Environments**.
@@ -38,3 +38,63 @@ Firebase Auth Dev
 
 ---
 
+## 1️⃣ Step Register / Membuat Akun Baru
+### Endpoint
+```
+POST https://identitytoolkit.googleapis.com/v1/accounts:signUp?key={{FIREBASE_API_KEY}}
+```
+### Headers
+
+| Key          | Value            | Keterangan                                  |
+| ------------ | ---------------- | ------------------------------------------- |
+| Content-Type | application/json | Wajib untuk semua request Firebase REST API |
+
+### Request Body (raw JSON) 
+```
+{
+  "email": "{{USER_EMAIL}}",
+  "password": "{{USER_PASSWORD}}",
+  "returnSecureToken": true
+}
+```
+| Field             | Tipe    | Keterangan                                              |
+| ----------------- | ------- | ------------------------------------------------------- |
+| email             | string  | Email yang akan didaftarkan                             |
+| password          | string  | Password minimal 6 karakter                             |
+| returnSecureToken | boolean | Harus bernilai `true` agar Firebase mengembalikan token |
+
+### Response Sukses : 200 OK 
+```
+{
+ "localId": "UID_USER",
+ "email": "test@example.com",
+ "idToken": "FIREBASE_ID_TOKEN",
+ "refreshToken": "REFRESH_TOKEN",
+ "expiresIn": "3600"
+}
+```
+<img width="700"  src="https://github.com/user-attachments/assets/bca8687f-1587-477c-b60e-1fefecef9abb" />
+<img width="700"  src="https://github.com/user-attachments/assets/923106d6-0d0c-4115-b176-d38741ec09fb" />
+<img width="700"  src="https://github.com/user-attachments/assets/0b50b18f-683f-440d-af35-e9910c936c2a" />
+
+### Response Error : 400 Bad Request
+```
+{ 
+    "error": { 
+        "code": 400, 
+        "message": "EMAIL_EXISTS",       // ← Email sudah terdaftar 
+        "status": "INVALID_ARGUMENT" 
+    } 
+} 
+```
+<img width="700"  src="https://github.com/user-attachments/assets/05cd2e43-f2a8-4e10-a392-3ecbf20a3f69" />
+
+### Error Code
+
+| Error Code                  | Artinya                         | Solusi                              |
+| --------------------------- | ------------------------------- | ----------------------------------- |
+| EMAIL_EXISTS                | Email sudah terdaftar           | Gunakan email lain                  |
+| INVALID_EMAIL               | Format email tidak valid        | Gunakan format email yang benar     |
+| WEAK_PASSWORD               | Password kurang dari 6 karakter | Gunakan password minimal 6 karakter |
+| OPERATION_NOT_ALLOWED       | Email/password auth belum aktif | Aktifkan di Firebase Console        |
+| TOO_MANY_ATTEMPTS_TRY_LATER | Terlalu banyak percobaan        | Tunggu beberapa menit               |

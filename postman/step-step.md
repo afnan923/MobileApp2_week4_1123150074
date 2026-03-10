@@ -67,11 +67,14 @@ POST
 ### Response Sukses : 200 OK 
 ```
 {
- "localId": "UID_USER",
- "email": "test@example.com",
- "idToken": "FIREBASE_ID_TOKEN",
- "refreshToken": "REFRESH_TOKEN",
- "expiresIn": "3600"
+    "kind": "identitytoolkit#SignupNewUserResponse", 
+    "localId": "aBcDeFgHiJkLmN",        // ← UID unik user di Firebase 
+    "email": "test@example.com", 
+    "displayName": "",
+    "idToken": "eyJhbGciOiJSUzI1...",    // ← Firebase ID Token (JWT, 1 jam) 
+    "registered": false, 
+    "refreshToken": "AMf-vBxK...",        // ← Untuk refresh idToken 
+    "expiresIn": "3600"                  // ← Token kadaluarsa dalam 3600 detik
 }
 ```
 <img width="700"  src="https://github.com/user-attachments/assets/bca8687f-1587-477c-b60e-1fefecef9abb" />
@@ -119,7 +122,7 @@ if (pm.response.code === 200) {
 ```
 <img width="700" src="https://github.com/user-attachments/assets/6eaf8861-3c1e-4631-a976-920464e0aefb" />
 
-##  2️⃣ Kirim Email Verification
+##  2️⃣ Step Kirim Email Verification
 ### Endpoint
 POST
 ```
@@ -200,7 +203,8 @@ console.log("Gagal kirim email:", pm.response.json().error.message);
 } 
 ```
 
-##  3️⃣ Cek Status Verifikasi Email dengan CARA A — Cek langsung ke Firebase (accounts:lookup)
+##  3️⃣ Step Cek Status Verifikasi Email dengan CARA A — Cek langsung ke Firebase (accounts:lookup)
+
 ### Endpoint
 
 POST
@@ -256,18 +260,17 @@ POST
 ```
 <img width="1296" height="547" alt="Screenshot 2026-03-10 161848" src="https://github.com/user-attachments/assets/9f2ae14d-004f-4ca6-b392-c10f49adca5b" />
 
-## 4️⃣ Login dengan Email & Password 
-```
-Mengapa perlu Login setelah sudah Register? 
-idToken dari Step 1 (Register) sudah kadaluarsa setelah 1 jam. 
-Setelah user klik link verifikasi di email → status berubah, tapi idToken lama tidak otomatis 
-terupdate. 
-Dengan Login ulang → Firebase mengembalikan idToken BARU yang sudah merefleksikan 
-emailVerified: true.
-```
+## 4️⃣ Step Login dengan Email & Password 
+
+### Mengapa perlu Login setelah sudah Register?  
+idToken dari Step 1 (Register) sudah kadaluarsa setelah 1 jam.  
+Setelah user klik link verifikasi di email → status berubah, tapi idToken lama tidak otomatis terupdate.  
+Dengan Login ulang → Firebase mengembalikan idToken BARU yang sudah merefleksikan emailVerified: true.  
+
 ### Endpoint
+POST  
 ```
-POST https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={{FIREBASE_API_KEY}}
+ https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={{FIREBASE_API_KEY}}
 ```
 
 ### Request Body (raw JSON) 
@@ -297,13 +300,13 @@ POST https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={
 ----
 
 ### Decode Firebase ID Token untuk melihat isinya 
-```
-Salin idToken dan paste ke: jwt.io 
-Di bagian Payload, cari field "email_verified". 
-Jika user sudah klik link verifikasi: "email_verified": true 
-Jika belum: "email_verified": false 
-Ini membuktikan bahwa informasi email_verified ada DALAM token itu sendiri.
-```
+
+Salin idToken dan paste ke: jwt.io  
+Di bagian Payload, cari field "email_verified".  
+Jika user sudah klik link verifikasi: "email_verified": true  
+Jika belum: "email_verified": false  
+Ini membuktikan bahwa informasi email_verified ada DALAM token itu sendiri.  
+
 ### Contoh Decoded Firebase JWT Payload (di jwt.io)
 ```
 { 
@@ -324,7 +327,9 @@ Ini membuktikan bahwa informasi email_verified ada DALAM token itu sendiri.
     } 
 }
 ```
+
 <img width="824" height="538" alt="jwt" src="https://github.com/user-attachments/assets/dcae6d3b-7da3-4f59-a85a-1707e565761d" />
+
 ### Response Error : 400 Bad Request
 ```
 { 
@@ -364,7 +369,7 @@ console.log("Login gagal:", json.error.message);
 }
 ```
 
-## 5️⃣ POST Firebase Token ke Backend
+## 5️⃣ Step POST Firebase Token ke Backend
 
 Kita kirim Firebase ID Token (dari Login) ke endpoint backend /auth/verify-token.  
 Backend decode token, verifikasi ke Google, cek emailVerified.  
@@ -380,8 +385,7 @@ POST
 
 | Key | Value | Keterangan |
 |---|---|---|
-| Content-Type | application/json | Wajib untuk mengirim JSON |
-| Accept | application/json | Opsional namun disarankan |
+| Content-Type | application/json | Wajib |
 
 ### Request Body
 
@@ -390,44 +394,127 @@ POST
   "firebase_token": "{{FIREBASE_ID_TOKEN}}"
 }
 ```
-### Field / Key
-
-| Field          | Tipe   | Keterangan                                       |
-| -------------- | ------ | ------------------------------------------------ |
-| firebase_token | string | Firebase ID Token yang didapat dari proses login |
-
 ### Response Sukses
 ```
 {
-  "success": true,
-  "data": {
-    "access_token": "BACKEND_JWT_TOKEN",
-    "token_type": "Bearer",
-    "expires_in": 86400,
-    "user": {
-      "uid": "aBcDeFgHiJkLmN",
-      "email": "test@example.com",
-      "email_verified": true
-    }
-  }
+    "success": true, 
+    "data": { 
+        "access_token": "eyJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiJh...", 
+        "token_type": "Bearer", 
+        "expires_in": 86400, 
+        "user": { 
+            "id": 1,
+            "uid": "aBcDeFgHiJkLmN", 
+            "email": "test@example.com", 
+            "name": "Test User", 
+            "email_verified": true, 
+            "role": "user", 
+            "created_at": "2024-01-01T00:00:00Z" 
+        } 
+    } 
 }
 ```
-### Error Code
-| Error Code             | Artinya                    | Solusi                                    |
-| ---------------------- | -------------------------- | ----------------------------------------- |
-| EMAIL_NOT_VERIFIED     | Email belum diverifikasi   | Buka inbox email dan klik link verifikasi |
-| INVALID_FIREBASE_TOKEN | Firebase token tidak valid | Login ulang untuk mendapatkan token baru  |
-| TOKEN_EXPIRED          | Token sudah kadaluarsa     | Lakukan login ulang                       |
+
 ### Postman Test Script
 ```
-const json = pm.response.json();
-
-if (pm.response.code === 200) {
-    pm.environment.set("BACKEND_TOKEN", json.data.access_token);
-    console.log("Backend token berhasil disimpan.");
+// Postman → Tests tab: 
+const json = pm.response.json(); 
+ 
+pm.test("Status harus 200", () => pm.response.to.have.status(200)); 
+pm.test("Ada access_token", () => { 
+    pm.expect(json.data).to.have.property("access_token"); 
+    pm.expect(json.data.access_token).to.be.a("string"); 
+}); 
+pm.test("email_verified harus true", () => { 
+    pm.expect(json.data.user.email_verified).to.eql(true); 
+}); 
+ 
+if (pm.response.code === 200) { 
+    pm.environment.set("BACKEND_TOKEN", json.data.access_token); 
+    console.log("Backend token tersimpan ke environment."); 
+    console.log("Sekarang lanjut ke Step 6: akses protected endpoint.");
 }
 ```
 
+----
+### Perbedaan Firebase Token vs Backend Token
+Firebase Token: dibuat oleh Google, berlaku 1 jam, berisi info dari Firebase (emailVerified, signInProvider, dll).  
+Backend Token: dibuat oleh server kamu (menggunakan secret key-mu), berlaku sesuai setting kamu (biasanya 24 jam).  
+Backend Token bisa berisi custom data seperti role, permissions, subscription tier, dsb.  
+Protected endpoint backend HANYA menerima Backend Token — bukan Firebase Token.  
+
+## 6️⃣ Step Akses Protected Endpoint (GET /products)
+
+Protected Endpoint = Endpoint yang butuh autentikasi  
+Semua endpoint yang memerlukan user login akan dicek Authorization headernya.  
+Backend akan decode Backend JWT dan verifikasi apakah valid dan belum expired.  
+Jika tidak ada token atau token salah → backend return 401 Unauthorized.  
+
+### Endpoint
+
+GET /products — Ambil Daftar Produk    
+```{{BACKEND_BASE_URL}}/products```
+
+### Headers
+
+| Key           | Value                    | Keterangan                     |
+| ------------- | ------------------------ | ------------------------------ |
+| Authorization | Bearer {{BACKEND_TOKEN}} | Format WAJIB: "Bearer " (ada spasi) + token |
+| Accept        | application/json         | Best practice                  |
 
 
+### Response Sukses
+```
+    { 
+    "success": true, 
+    "data": [ 
+        { 
+            "id": 1, 
+            "name": "Nasi Goreng Spesial", 
+            "price": 25000, 
+            "category": "Makanan", 
+            "image_url": "https://cdn.example.com/products/nasi-goreng.jpg", 
+            "stock": 50 
+        }, 
+        { 
+            "id": 2, 
+            "name": "Es Teh Manis", 
+            "price": 8000, 
+            "category": "Minuman", 
+            "image_url": "https://cdn.example.com/products/es-teh.jpg", 
+            "stock": 100 
+        }
+      ], 
+    "meta": { 
+        "total": 2, 
+        "page": 1, 
+        "per_page": 10 
+    } 
+} 
+```
 
+### Postman Test Script
+```
+// Postman → Tests tab: 
+pm.test("Status 200", () => pm.response.to.have.status(200)); 
+ 
+pm.test("Response punya field data", () => { 
+    const json = pm.response.json(); 
+    pm.expect(json).to.have.property("data"); 
+    pm.expect(json.data).to.be.an("array"); 
+}); 
+ 
+pm.test("Setiap produk punya field wajib", () => { 
+    const json = pm.response.json(); 
+    json.data.forEach(product => { 
+        pm.expect(product).to.have.property("id"); 
+        pm.expect(product).to.have.property("name"); 
+        pm.expect(product).to.have.property("price"); 
+    }); 
+}); 
+ 
+console.log("Total produk:", pm.response.json().data.length);
+```
+```markdown
+⚠️ Note: Step 5 dan Step 6 membutuhkan backend API yang berjalan di `{{BACKEND_BASE_URL}}`.
+Jika backend tidak tersedia, pengujian dapat dilakukan sampai Step 4 (Login Firebase).

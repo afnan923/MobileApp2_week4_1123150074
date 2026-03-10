@@ -102,6 +102,10 @@ Layer terakhir untuk **penyimpanan permanen data user**.
 │   └── ringkasan.md
 └──────────────────────────────────────────────────
 ```
+- [README.md](https://github.com/afnan923/MobileApp2_week4_1123150074/blob/development/README.md) - Firebase Auth + Backend with Postman
+- [firebase.md](https://github.com/afnan923/MobileApp2_week4_1123150074/blob/development/firebase/firebase.md) - Firebase Project Setup & Web API Key
+- [step-step.md](https://github.com/afnan923/MobileApp2_week4_1123150074/blob/development/postman/step-step.md) - Step-by-Step Postman
+- [ringkasan.md](https://github.com/afnan923/MobileApp2_week4_1123150074/blob/development/postman/ringkasan.md) - Ringkasan & Troubleshooting Postman
 
 ## Acknowledgments
 

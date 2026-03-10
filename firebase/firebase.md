@@ -8,7 +8,7 @@ Tutorial ini menjelaskan cara membuat project di **Firebase** dan menemukan **We
 
 1. Buka website Firebase Console
    https://console.firebase.google.com
-   <img width="600"  src="https://github.com/user-attachments/assets/f0fdc606-45dc-4c98-936b-53d45fcc15af" />
+    <img width="600"  src="https://github.com/user-attachments/assets/f0fdc606-45dc-4c98-936b-53d45fcc15af" />
 
 
 3. Klik **Create a Project** atau **Add Project**.
@@ -19,20 +19,20 @@ Tutorial ini menjelaskan cara membuat project di **Firebase** dan menemukan **We
    ```
    postman
    ```
-  <img width="600"  src="https://github.com/user-attachments/assets/d7a599c4-ab5c-48c4-a914-f9de43136429" />
+    <img width="600"  src="https://github.com/user-attachments/assets/d7a599c4-ab5c-48c4-a914-f9de43136429" />
 
 5. Klik **Continue**.
 
 6. Pilih pengaturan **Google Analytics**:
 
    * Bisa **Enable** atau **Disable**.
-   * Untuk project sederhana biasanya **Disable** saja tapi saya **Enable** agar lebih mudah.
-  <img width="600"  src="https://github.com/user-attachments/assets/a1c7b9e4-d17f-4632-9011-9bf112e7e8c8" />
+    <img width="600"  src="https://github.com/user-attachments/assets/a1c7b9e4-d17f-4632-9011-9bf112e7e8c8" />
 
 7. Klik **Create Project**.
-  <img width="600"  src="https://github.com/user-attachments/assets/7bf682dc-0019-43d8-98f8-85196544a05d" />
 
-8. Tunggu proses pembuatan project selesai lalu klik **Continue**.
+    <img width="600"  src="https://github.com/user-attachments/assets/7bf682dc-0019-43d8-98f8-85196544a05d" />
+
+9. Tunggu proses pembuatan project selesai lalu klik **Continue**.
 
 ---
 
@@ -44,16 +44,25 @@ Tutorial ini menjelaskan cara membuat project di **Firebase** dan menemukan **We
 
 3. Pada menu sebelah kiri, klik **Build**.
 
-   <img width="600" src="https://github.com/user-attachments/assets/1383a991-fb25-410d-9d5e-6973d194c288" />
+<img width="600" src="https://github.com/user-attachments/assets/1383a991-fb25-410d-9d5e-6973d194c288" />
 
-4. Pilih **Authentication** dan klik bagian **Get Started**.
+4. Pilih **Authentication** lalu klik **Get Started** untuk mengaktifkan layanan autentikasi.
 
-   <img width="600" src="https://github.com/user-attachments/assets/2ff21b29-92af-40fb-8f54-11f1ccce8fc0" />
+<img width="600" src="https://github.com/user-attachments/assets/2ff21b29-92af-40fb-8f54-11f1ccce8fc0" />
 
-5. Tampilan setelah menambahkan **Authentication**.
+5. Setelah Authentication aktif, buka tab **Sign-in method**.
 
-   <img width="600" src="https://github.com/user-attachments/assets/0184d89a-227f-487e-aff8-2895c85d15e0" />
+6. Pilih provider **Email/Password**.
 
+7. Aktifkan opsi **Enable** pada Email/Password Authentication.
+
+8. Klik **Save** untuk menyimpan pengaturan.
+
+9. Tampilan setelah **Authentication Email/Password berhasil diaktifkan**.
+
+<img width="600" src="https://github.com/user-attachments/assets/0184d89a-227f-487e-aff8-2895c85d15e0" />
+
+> ⚠️ Pastikan **Email/Password provider sudah aktif**, karena metode ini akan digunakan untuk proses **register dan login melalui API Firebase**.
 ---
 
 ## 3. Menambahkan Aplikasi Web
